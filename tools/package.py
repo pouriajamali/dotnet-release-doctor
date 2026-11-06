@@ -23,7 +23,7 @@ def main():
  for f in ['README.md','PROVENANCE.md','SIGNING-PUBLIC-KEY.pub','NOTICE.md']:shutil.copy2(ROOT/f,package/f)
  shutil.copy2(ROOT/'LICENSE',package/'LICENSE')
  licenses=package/'licenses';licenses.mkdir()
- assets=json.loads((ROOT/'src/RecoveryDrill/obj/project.assets.json').read_text())
+ assets=json.loads((ROOT/'src/ReleaseDoctor/obj/project.assets.json').read_text())
  folders=[Path(f) for f in assets['packageFolders']];dependencies=[]
  for identity,entry in sorted(assets['libraries'].items()):
   if entry['type']!='package':continue

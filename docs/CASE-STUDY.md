@@ -6,6 +6,7 @@
 | Classify AnyCPU separately from I386 native | Separately compiled no-RID AnyCpuGolden plus real x64 Tripwire and numeric32-bit flag mutations | Not all CLI/host/ABI formats |
 | Avoid host-compatibility claims | Disable roll-forward, two frameworks, expected-version with separate build metadata | Reads declarations; does not resolve runtime policy |
 | Duplicate JSON cannot silently win | Root/nested duplicate fields, deps duplicates, bounded arrays/bytes | Unknown non-contract metadata is not authenticated |
+| Nested entries use their paired metadata | app/Sample.dll regression compares its paired deps asset Sample.dll | Not a full dependency resolver |
 | A manifest cannot exempt arbitrary files | Exact self-exemption, missing/extra/hash, unsafe/duplicate/case-colliding/self-reference/wrong-size paths | Unsigned inventory agreement is not provenance |
 | Late changes override earlier checks | Changes before config read, before recheck and late added file | No hostile-filesystem race guarantee |
 | Child exit0 alone is insufficient | Missing/truncated/extra/duplicate/version/incomplete/oversized receipts and real hang/flood/exit17 children | Test probes are excluded from consumer archives |
@@ -20,6 +21,16 @@ The test host now dispatches the exact production worker entry, the AnyCPU golde
 is a separately compiled no-RID project, and each mutation must differ from its
 valid receipt. Actual consumer-package CLI tests additionally use the shipped apphost.
 These harness corrections do not establish application startup or performance.
+
+Independent review also reproduced root-directory containment, final-newline
+regex anchoring and nested-entry resolution defects before publication. Root
+containment now preserves the root separator, patterns use absolute anchors and
+explicit control rejection, and the nested entry uses its paired deps directory.
+Lexical root/child/reverse/sibling tests never walk a real filesystem root;
+control, line-separator and BOM characters are tried at every component/version
+position. A mutated informational-version blob also cannot pass or leak its value.
+The initial packaging adapter's wrong assets-directory path is retained as a failed
+build log and corrected before candidate packaging. No failed candidate is released.
 
 The public Execution lab's fixed release archives supply a separate real FDD
 inventory/config/header compatibility example, inspected without running them.

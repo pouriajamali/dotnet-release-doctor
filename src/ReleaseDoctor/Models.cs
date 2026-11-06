@@ -38,13 +38,13 @@ internal static partial class Contract
 {
     public static readonly JsonSerializerOptions Json = new() { PropertyNamingPolicy=JsonNamingPolicy.CamelCase, WriteIndented=true };
     public static readonly string[] CheckIds = ["runtime-config", "deps", "entry-metadata", "native-headers", "expected-version", "inventory"];
-    [GeneratedRegex(@"^[A-Za-z0-9][A-Za-z0-9._ -]*$")]
+    [GeneratedRegex(@"\A[A-Za-z0-9][A-Za-z0-9._ -]*\z")]
     private static partial Regex ComponentPattern();
-    [GeneratedRegex(@"^[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$")]
+    [GeneratedRegex(@"\A[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?\z")]
     private static partial Regex VersionPattern();
     public static string Relative(string path)
     {
-        if(path.Length is 0 or >384 || path.Contains('\\') || path.Contains(':') || path.StartsWith('/') || path.Split('/').Length>16)
+        if(path.Length is 0 or >384 || path.Any(char.IsControl) || path.Contains('\\') || path.Contains(':') || path.StartsWith('/') || path.Split('/').Length>16)
             throw new Problem("PATH_UNSUPPORTED");
         foreach(string part in path.Split('/'))
             if(part.Length is 0 or >96 || part is "." or ".." || part.EndsWith(' ') || part.EndsWith('.') || !ComponentPattern().IsMatch(part))
@@ -53,7 +53,7 @@ internal static partial class Contract
     }
     public static string Version(string value)
     {
-        if(value.Length>128 || !VersionPattern().IsMatch(value)) throw new Problem("VERSION_UNSUPPORTED");
+        if(value.Length>128 || value.Any(char.IsControl) || !VersionPattern().IsMatch(value)) throw new Problem("VERSION_UNSUPPORTED");
         return value;
     }
     public static string ReleasePart(string value)=>Version(value).Split('+')[0];

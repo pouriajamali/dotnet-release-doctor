@@ -37,7 +37,7 @@ internal static class StaticChecks
             string name=Contract.Text(Contract.Required(entry,"name")),version=Contract.Text(Contract.Required(entry,"version"));
             if(name is not ("Microsoft.NETCore.App" or "Microsoft.AspNetCore.App")) throw new Problem("CUSTOM_FRAMEWORK_UNSUPPORTED");
             if(!names.Add(name)) throw new Problem("DUPLICATE_FRAMEWORK",true);
-            if(!Regex.IsMatch(version,@"^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,5}$") || !Version.TryParse(version,out _)) throw new Problem("FRAMEWORK_VERSION_UNSUPPORTED");
+            if(!Regex.IsMatch(version,@"\A[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,5}\z") || !Version.TryParse(version,out _)) throw new Problem("FRAMEWORK_VERSION_UNSUPPORTED");
             result.Add(new(name,version,policy));
         }
         if(!names.Contains("Microsoft.NETCore.App")) throw new Problem("CORE_FRAMEWORK_REQUIRED");
@@ -47,7 +47,7 @@ internal static class StaticChecks
     {
         using var d=Contract.ParseJson(bytes);var root=Contract.Object(d.RootElement);
         string name=Contract.Text(Contract.Required(Contract.Required(root,"runtimeTarget"),"name"));
-        if(!Regex.IsMatch(name,@"^\.NETCoreApp,Version=v[0-9]{1,3}\.[0-9]{1,3}(?:/(?:win-x64|linux-x64))?$")) throw new Problem("DEPS_TARGET_UNSUPPORTED");
+        if(!Regex.IsMatch(name,@"\A\.NETCoreApp,Version=v[0-9]{1,3}\.[0-9]{1,3}(?:/(?:win-x64|linux-x64))?\z")) throw new Problem("DEPS_TARGET_UNSUPPORTED");
         if(name.Contains('/') && name.Split('/')[1]!=rid) throw new Problem("DEPS_RID_MISMATCH",true);
         var targets=Contract.Object(Contract.Required(root,"targets"));
         if(!targets.TryGetProperty(name,out var target)) throw new Problem("DEPS_TARGET_MISSING",true);
@@ -59,7 +59,7 @@ internal static class StaticChecks
             {
                 Contract.Object(runtime);
                 foreach(var asset in runtime.EnumerateObject())
-                    if(asset.Name==entry) found=true;
+                    if(asset.Name==Path.GetFileName(entry)) found=true; // Runtime asset is relative to its paired deps directory.
             }
         }
         if(!found) throw new Problem("ENTRY_RUNTIME_ASSET_MISSING",true);
@@ -125,7 +125,7 @@ internal static class StaticChecks
             if(path==selected) throw new Problem("MANIFEST_SELF_REFERENCE",true);
             string hash=Contract.Text(Contract.Required(item,"sha256"));
             var size=Contract.Required(item,"bytes");
-            if(size.ValueKind!=JsonValueKind.Number || !size.TryGetInt64(out long count) || count<0 || !Regex.IsMatch(hash,@"^[0-9a-f]{64}$")) throw new Problem("MANIFEST_SHAPE",true);
+            if(size.ValueKind!=JsonValueKind.Number || !size.TryGetInt64(out long count) || count<0 || !Regex.IsMatch(hash,@"\A[0-9a-f]{64}\z")) throw new Problem("MANIFEST_SHAPE",true);
             if(!snapshot.Files.TryGetValue(path,out var actual) || actual.Bytes!=count || actual.Sha256!=hash) throw new Problem("INVENTORY_MISMATCH",true);
             exact.Add(path);
         }

@@ -40,7 +40,13 @@ internal sealed class Snapshot
             p=Path.GetDirectoryName(p);
         }
     }
-    public static bool Nested(string a,string b)=>a.Equals(b,OperatingSystem.IsWindows()?StringComparison.OrdinalIgnoreCase:StringComparison.Ordinal) || a.StartsWith(b+Path.DirectorySeparatorChar,OperatingSystem.IsWindows()?StringComparison.OrdinalIgnoreCase:StringComparison.Ordinal);
+    public static bool Nested(string a,string b)
+    {
+        a=Path.TrimEndingDirectorySeparator(a);b=Path.TrimEndingDirectorySeparator(b);
+        StringComparison comparison=OperatingSystem.IsWindows()?StringComparison.OrdinalIgnoreCase:StringComparison.Ordinal;
+        string prefix=Path.EndsInDirectorySeparator(b)?b:b+Path.DirectorySeparatorChar;
+        return a.Equals(b,comparison)||a.StartsWith(prefix,comparison);
+    }
     public static Snapshot Capture(string root)
     {
         NoLinks(root);if(!Directory.Exists(root)) throw new Problem("INPUT_DIRECTORY_REQUIRED");

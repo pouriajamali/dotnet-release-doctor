@@ -45,6 +45,7 @@ internal static class Program
         using(var pe=new PEReader(new MemoryStream(b)))offset=pe.PEHeaders.CorHeaderStartOffset+16;
         int flags=BinaryPrimitives.ReadInt32LittleEndian(b.AsSpan(offset));BinaryPrimitives.WriteInt32LittleEndian(b.AsSpan(offset),flags|add);File.WriteAllBytes(p,b);
     }
+    private static IEnumerable<char> Controls()=>Enumerable.Range(0,32).Concat(Enumerable.Range(127,33)).Concat(new[]{0x2028,0x2029,0xfeff}).Select(i=>(char)i);
     private static ProcessStartInfo Self(string mode)
     {
         string host=Environment.ProcessPath!;var start=new ProcessStartInfo(host);
@@ -90,6 +91,7 @@ internal static class Program
         });
         await Case("expected-version-release-part-with-build-metadata",async()=>{var r=await Inspect(Target(),expected:"0.1.0-preview.1+ignored-external-build");Require(r.ExitCode==0);});
         await Case("expected-version-mismatch",async()=>{var r=await Inspect(Target(),expected:"9.0.0");Require(r.ExitCode==2&&r.Reason=="EXPECTED_VERSION_MISMATCH");});
+        await Case("nested-entry-uses-paired-deps-directory",async()=>{string p=Next("nested target");Demo.Fixture(Path.Combine(p,"app"),AnyCpuAssembly);var r=await Inspect(p,entry:"app/Sample.dll");Require(r.ExitCode==0&&r.Complete,r.Reason);});
         foreach(string suffix in new[]{"dll","runtimeconfig.json","deps.json"})await Case("missing-"+suffix,async()=>{string p=Target();File.Delete(Path.Combine(p,"Sample."+suffix));var r=await Inspect(p);Require(r.ExitCode==1&&!r.Complete);});
         foreach(var item in new[]{
             ("malformed-json","{",2,"JSON_INVALID"),
@@ -164,6 +166,35 @@ internal static class Program
             foreach(string path in new[]{"../escape","a\\b","bad\nfile","/absolute","a:stream",new string('a',97),string.Join('/',Enumerable.Repeat("x",17))})
             {try{Contract.Relative(path);throw new InvalidOperationException("Unsafe path accepted");}catch(Problem){}}
             return Task.CompletedTask;
+        });
+        await Case("all-controls-every-component-position",()=>
+        {
+            foreach(char c in Controls()) foreach(string part in new[]{"payload.dll","folder"}) for(int i=0;i<=part.Length;i++)
+            {
+                string changed=part.Insert(i,c.ToString()),path=part=="folder"?changed+"/payload.dll":changed;
+                try{Contract.Relative(path);throw new InvalidOperationException("Control component accepted");}catch(Problem){}
+            }
+            return Task.CompletedTask;
+        });
+        await Case("all-controls-every-version-position",()=>
+        {
+            foreach(char c in Controls()) foreach(string version in new[]{"1.0.0","1.0.0-preview.1+abc"})for(int i=0;i<=version.Length;i++)
+            {try{Contract.Version(version.Insert(i,c.ToString()));throw new InvalidOperationException("Control version accepted");}catch(Problem){}}
+            return Task.CompletedTask;
+        });
+        await Case("root-child-reverse-sibling-boundaries-without-root-walk",()=>
+        {
+            string root=Path.GetPathRoot(Path.GetFullPath(Root))!,child=Path.Combine(root,"doctor-child"),sibling=Path.Combine(root,"doctor-child-other");
+            Require(Snapshot.Nested(child,root)&&Snapshot.Nested(root,root)&&!Snapshot.Nested(root,child)&&!Snapshot.Nested(sibling,child)&&!Snapshot.Nested(child,sibling));
+            Require(Snapshot.Nested(Path.Combine(child,"nested"),child)&&Snapshot.Nested(child+Path.DirectorySeparatorChar,child));return Task.CompletedTask;
+        });
+        await Case("runtime-version-final-newline-unsupported",async()=>{string p=Target();Runtime(p,JsonSerializer.Serialize(new{runtimeOptions=new{framework=new{name="Microsoft.NETCore.App",version="10.0.14\n"}}}));await Expect(p,1,"FRAMEWORK_VERSION_UNSUPPORTED");});
+        await Case("metadata-version-final-newline-not-reported",async()=>
+        {
+            string p=Target(),f=Path.Combine(p,"Sample.dll");MetadataResult original=Metadata.Read(f);string version=original.ReleaseVersion+(original.BuildMetadata.Length>0?"+"+original.BuildMetadata:"");
+            byte[] b=File.ReadAllBytes(f),needle=System.Text.Encoding.UTF8.GetBytes(version);int start=0,matches=0;
+            while(start<b.Length){int found=b.AsSpan(start).IndexOf(needle);if(found<0)break;found+=start;b[found+needle.Length-1]=10;matches++;start=found+needle.Length;}
+            Require(matches>0);File.WriteAllBytes(f,b);var r=await Inspect(p);Require(r.ExitCode==1&&r.Reason=="VERSION_UNSUPPORTED"&&r.ReleaseVersion=="NOT_CHECKED");
         });
         await Case("report-collision-keeps-sentinel",async()=>
         {
