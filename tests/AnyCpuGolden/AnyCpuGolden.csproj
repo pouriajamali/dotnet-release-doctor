@@ -1,0 +1,3 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>Exe</OutputType><AssemblyName>AnyCpuGolden</AssemblyName><PlatformTarget>AnyCPU</PlatformTarget><UseAppHost>false</UseAppHost><SelfContained>false</SelfContained></PropertyGroup>
+</Project>

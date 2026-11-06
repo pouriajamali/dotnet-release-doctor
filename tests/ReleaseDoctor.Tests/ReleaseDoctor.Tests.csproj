@@ -1,0 +1,4 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>Exe</OutputType><AssemblyName>ReleaseDoctor.Tests</AssemblyName></PropertyGroup>
+  <ItemGroup><ProjectReference Include="../../src/ReleaseDoctor/ReleaseDoctor.csproj" /></ItemGroup>
+</Project>
