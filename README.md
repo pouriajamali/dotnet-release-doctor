@@ -150,3 +150,9 @@ shared, employer or customer source/contracts/data are included. No hosted servi
 deployment, trading, account connection, package installation or repair is provided.
 
 [CI resource policy](docs/CI-POLICY.md): documentation-only changes get real lightweight document/pipeline checks; source, tag and manual runs retain native validation. Published runtime tags and release assets remain unchanged.
+
+## Source readability
+
+The current source expands compact C# layout for review. The published preview links identify its frozen runtime release. Formatting preserves complete syntax, token text and values, comments and directives; it does not introduce a runtime behavior or performance claim.
+
+To reproduce a published package, use its exact original runtime source: [v0.1.0-preview.1 source](https://github.com/pouriajamali/dotnet-release-doctor/tree/33d1c733c1a2d8bd940f42809536d42cb284477e) (`33d1c733c1a2d8bd940f42809536d42cb284477e`). Later `main` layout is reviewed separately from those frozen release commits.
