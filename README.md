@@ -148,3 +148,5 @@ notices remain in each bundle. The public MIT portfolio transport/packaging and
 provenance guide are reused with attribution in [NOTICE](NOTICE.md). No private,
 shared, employer or customer source/contracts/data are included. No hosted service,
 deployment, trading, account connection, package installation or repair is provided.
+
+[CI resource policy](docs/CI-POLICY.md): documentation-only changes get real lightweight document/pipeline checks; source, tag and manual runs retain native validation. Published runtime tags and release assets remain unchanged.
