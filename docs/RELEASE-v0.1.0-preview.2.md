@@ -41,7 +41,7 @@ Both actual extracted archives passed14 package checks and3 independent M1
 sentinel cases. Input hashes stayed unchanged and targets were never executed.
 All actual native phases terminated with exact-own lease release. The archive
 aggregation and known SSH checksum signature were separately validated without
-rebuilding healthy binaries. See the [case study](CASE-STUDY.md) for failed setup
+rebuilding healthy binaries. See the [case study](https://github.com/pouriajamali/dotnet-release-doctor/blob/388a8419af1491025ec6e5fbdc9fc2b2298c65d8/docs/CASE-STUDY.md) for failed setup
 receipts, corrected causes and the Windows experimental-host limit. CI was
 NOT_RUN per owner; zero Actions runs were observed for the runtime commit.
 Current documentation may be newer than the frozen runtime/source assets; the
