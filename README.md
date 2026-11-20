@@ -6,19 +6,20 @@ observed architecture/RID inconsistencies and an optional file-inventory compari
 as JSON and a plain text report. This is a static check, not a runtime installer
 or a verdict that an application is safe or will start.
 
-Preview channel: **v0.1.0-preview.1**. [Downloads](https://github.com/pouriajamali/dotnet-release-doctor/releases/tag/v0.1.0-preview.1)
+Preview channel: **v0.1.0-preview.2**. [Downloads](https://github.com/pouriajamali/dotnet-release-doctor/releases/tag/v0.1.0-preview.2)
 and [signature verification](PROVENANCE.md). A missing release or checksum signature
 is an incomplete publication; do not bypass verification.
 
-## Servicing candidate
+## .NET 10 LTS servicing
 
-Source branch `codex/wave5-net10-servicing-20261120` prepares v0.1.0-preview.2
-with .NET 10 LTS runtime 10.0.15 and SDK 10.0.404. The verified downloads above
-remain preview.1 until both native platform packages are qualified and published.
-See [candidate release notes](docs/RELEASE-v0.1.0-preview.2.md). Existing reports,
-FDD scope and source-only M1 consumer semantics remain unchanged. No Actions run
-is authorized; local results are recorded separately. The dormant historical
-workflow pins SDK 10.0.403 and must not be used to reproduce this candidate.
+This preview uses .NET runtime 10.0.15 and SDK 10.0.404. See
+[servicing release notes and host limitations](docs/RELEASE-v0.1.0-preview.2.md).
+The FDD target scope, report/check semantics and source-only M1 companion are
+unchanged. Static PASS remains unrelated to startup, runtime resolution or safety.
+CI was not run per owner instruction. The dormant historical workflow still pins
+SDK 10.0.403; do not invoke it to reproduce this servicing build. Use the pinned
+SDK and the local commands below. Missing release assets or signed checksums mean
+publication is incomplete.
 
 ## Start with the synthetic demo
 
@@ -83,8 +84,8 @@ Use the source-only [report consumption example](docs/REPORT-CONSUMPTION.md) wit
 Python 3.12+: it checks the saved Doctor process exit against the report, preserves
 `not_checked`/unsupported reasons, and can explicitly require inventory or version
 checks. The guide includes a selected-PASS counterexample and failure handling.
-The frozen consumer download above remains v0.1.0-preview.1; this companion example
-is in the source checkout and does not change the inspector or its binaries.
+The companion example is in the source checkout; it preserves the inspector's
+report contract and does not start the inspected target.
 
 ## Supported checks and limits
 
@@ -172,6 +173,6 @@ deployment, trading, account connection, package installation or repair is provi
 
 ## Source readability
 
-The current source expands compact C# layout for review. The published preview links identify its frozen runtime release. Formatting preserves complete syntax, token text and values, comments and directives; it does not introduce a runtime behavior or performance claim.
+The earlier readability update expanded compact C# layout for review. The published preview links identify its frozen runtime release. Formatting preserves complete syntax, token text and values, comments and directives; it does not introduce a runtime behavior or performance claim.
 
 To reproduce a published package, use its exact original runtime source: [v0.1.0-preview.1 source](https://github.com/pouriajamali/dotnet-release-doctor/tree/33d1c733c1a2d8bd940f42809536d42cb284477e) (`33d1c733c1a2d8bd940f42809536d42cb284477e`). Later `main` layout is reviewed separately from those frozen release commits.

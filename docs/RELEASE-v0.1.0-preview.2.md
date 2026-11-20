@@ -1,7 +1,8 @@
-# v0.1.0-preview.2 servicing candidate
+# v0.1.0-preview.2 — .NET 10 LTS servicing
 
-Status: candidate, not a published cross-platform release. The existing signed
-preview.1 downloads and signatures remain unchanged.
+Preview release. Complete publication requires both native archives, the source
+archive and signed SHA256SUMS. The existing preview.1 assets/tags/signatures remain
+unchanged and can still be verified through their original checksum signature.
 
 - Retain net10.0 LTS. Upgrade the pinned source SDK from 10.0.403 to 10.0.404
   and the bundled runtime from 10.0.14 to 10.0.15, the official 2026-11-10
@@ -18,11 +19,13 @@ preview.1 downloads and signatures remain unchanged.
   CI is NOT_RUN per owner instruction; it is not replaced with a fictional CI PASS.
 
 The local Windows host reports 26H2/build26300. Microsoft's current .NET10
-supported-OS table lists Windows11 versions through26H1. This machine is not
-admitted for Windows SDK/native package qualification merely because another
-project ran there; a genuinely supported Windows route is required. Linux
-qualification uses the actual owned Ubuntu24.04 x64 job and its kernel limits.
-Do not infer Windows success from cross-publishing on Linux.
+supported-OS table lists Windows11 versions through26H1. The existing package pipeline requires matching native Windows/Linux OS and
+x64, rather than vendor certification of a particular Windows version. A local
+Windows26H2 execution, when successful, is reported only as experimental observed
+compatibility with owned Job Object limits; it is not vendor-supported OS
+admission or another project's qualification. Linux validation uses the actual
+owned Ubuntu24.04 x64 job with kernel limits. Cross-publishing a Windows local
+candidate on Linux is not matching-OS validation or a public Windows release.
 
 Official references: [.NET10 release metadata](https://builds.dotnet.microsoft.com/dotnet/release-metadata/10.0/releases.json),
 [10.0.15 notes](https://github.com/dotnet/core/blob/main/release-notes/10.0/10.0.15/10.0.15.md),
