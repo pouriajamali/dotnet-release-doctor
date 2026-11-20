@@ -67,6 +67,15 @@ installed runtime **NOT_CHECKED**, target startup **NOT_EXECUTED**, dependency
 resolution **NOT_PROVEN** and safety **NOT_ASSESSED**, including on exit0.
 Report files are not a power-loss-atomic pair; missing/invalid JSON is not success.
 
+## Consume the JSON in local automation
+
+Use the source-only [report consumption example](docs/REPORT-CONSUMPTION.md) with
+Python 3.12+: it checks the saved Doctor process exit against the report, preserves
+`not_checked`/unsupported reasons, and can explicitly require inventory or version
+checks. The guide includes a selected-PASS counterexample and failure handling.
+The frozen consumer download above remains v0.1.0-preview.1; this companion example
+is in the source checkout and does not change the inspector or its binaries.
+
 ## Supported checks and limits
 
 - Extracted directories only. Windows x64 / Ubuntu24.04 glibc x64 FDD targets;

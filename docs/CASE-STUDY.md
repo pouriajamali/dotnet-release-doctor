@@ -36,3 +36,24 @@ The public Execution lab's fixed release archives supply a separate real FDD
 inventory/config/header compatibility example, inspected without running them.
 Their release hashes and exact commands belong to the delivery receipt; no private
 application or customer dataset is an input. No benchmark was performed or claimed.
+
+## Wave5 M1: local report consumption example
+
+The source-only [consumer](../examples/consume_report.py) checks a captured process
+exit and a bounded v1 JSON report together. Explicit `--require` policy fails
+closed for unselected checks while preserving the original inspector result.
+See the [guide and counterexample](REPORT-CONSUMPTION.md) and seven focused
+[regressions](../tests/test_report_consumer.py). Inspector C# code, packaging,
+manifest/header/metadata semantics and frozen release assets are unchanged.
+Local validation includes a separate real Tripwire sentinel/hash observation;
+CI was not run per owner instruction. No startup/runtime/security claim follows.
+
+Observed on the owned Ubuntu 24.04 x64 WSL job: 7 focused tests and 3 inspection
+cases passed; 4 CLI decision cases returned the expected exits. The capped job
+used CPU quota 2, memory max 4 GiB, tasks max 64 and memory swap max 0. The local
+validation phase took about 14 seconds, peaked at 104,529,920 bytes cgroup memory
+and 16 tasks; no OOM event was observed. The owned unit/cgroup terminated and the
+exact-owner canonical lease was released. These observations are not a benchmark
+or a claim about other hosts. An initial source-identity lookup failed before
+tests because the Windows Git worktree link is not a Linux path; the bounded
+corrected run checked the same candidate's explicit SHA/file hashes instead.
