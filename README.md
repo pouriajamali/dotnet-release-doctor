@@ -10,6 +10,16 @@ Preview channel: **v0.1.0-preview.1**. [Downloads](https://github.com/pouriajama
 and [signature verification](PROVENANCE.md). A missing release or checksum signature
 is an incomplete publication; do not bypass verification.
 
+## Servicing candidate
+
+Source branch `codex/wave5-net10-servicing-20261120` prepares v0.1.0-preview.2
+with .NET 10 LTS runtime 10.0.15 and SDK 10.0.404. The verified downloads above
+remain preview.1 until both native platform packages are qualified and published.
+See [candidate release notes](docs/RELEASE-v0.1.0-preview.2.md). Existing reports,
+FDD scope and source-only M1 consumer semantics remain unchanged. No Actions run
+is authorized; local results are recorded separately. The dormant historical
+workflow pins SDK 10.0.403 and must not be used to reproduce this candidate.
+
 ## Start with the synthetic demo
 
 Extract the complete bundle and keep its files together. The doctor itself is
@@ -54,7 +64,7 @@ for malicious PE files.
 On Linux use `./doctor` and `--rid linux-x64` for a Linux target. The selected RID
 describes the **target**, not the computer running Doctor: cross-platform static
 inspection is allowed. Source checkout users can replace `doctor` with
-`dotnet run --project src/ReleaseDoctor -c Release --` using SDK10.0.403.
+`dotnet run --project src/ReleaseDoctor -c Release --` using SDK10.0.404.
 
 | Exit | Meaning |
 | --- | --- |

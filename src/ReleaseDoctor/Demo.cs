@@ -8,7 +8,7 @@ internal static class Demo
     {
         Directory.CreateDirectory(folder);
         File.Copy(assembly, Path.Combine(folder, "Sample.dll"), false);
-        File.WriteAllText(Path.Combine(folder, "Sample.runtimeconfig.json"), "{\"runtimeOptions\":{\"tfm\":\"net10.0\",\"framework\":{\"name\":\"Microsoft.NETCore.App\",\"version\":\"10.0.14\"}}}");
+        File.WriteAllText(Path.Combine(folder, "Sample.runtimeconfig.json"), "{\"runtimeOptions\":{\"tfm\":\"net10.0\",\"framework\":{\"name\":\"Microsoft.NETCore.App\",\"version\":\"10.0.15\"}}}");
         string target = ".NETCoreApp,Version=v10.0/" + rid;
         File.WriteAllText(Path.Combine(folder, "Sample.deps.json"), JsonSerializer.Serialize(new { runtimeTarget = new { name = target }, targets = new Dictionary<string, object> { { target, new Dictionary<string, object> { { "sample/0.1.0", new { runtime = new Dictionary<string, object> { { "Sample.dll", new { } } } } } } } }, libraries = new Dictionary<string, object> { { "sample/0.1.0", new { type = "project", serviceable = false } } } }));
     }

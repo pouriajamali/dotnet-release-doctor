@@ -9,7 +9,7 @@ internal static class Program
         {
             if (args.Length == 1 && args[0] == "--version")
             {
-                Console.WriteLine(".NET Release Doctor 0.1.0-preview.1");
+                Console.WriteLine(".NET Release Doctor 0.1.0-preview.2");
                 return 0;
             }
 

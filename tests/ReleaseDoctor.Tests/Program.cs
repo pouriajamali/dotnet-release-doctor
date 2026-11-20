@@ -161,7 +161,7 @@ internal static class Program
         {
             var r = await Inspect(Target());
             Require(r.ExitCode == 0 && r.Complete && r.ManagedArchitecture == "anycpu");
-            Require(r.Frameworks.Single().DeclaredVersion == "10.0.14" && r.Checks.Count(c => c.Code == "NOT_SELECTED") == 2 && r.InputProvenance == "UNVERIFIED" && r.Startup == "NOT_EXECUTED");
+            Require(r.Frameworks.Single().DeclaredVersion == "10.0.15" && r.Checks.Count(c => c.Code == "NOT_SELECTED") == 2 && r.InputProvenance == "UNVERIFIED" && r.Startup == "NOT_EXECUTED");
         });
         await Case("real-x64-fdd-tripwire-entry-apphost-not-executed", async () =>
         {
@@ -177,7 +177,7 @@ internal static class Program
         });
         await Case("expected-version-release-part-with-build-metadata", async () =>
         {
-            var r = await Inspect(Target(), expected: "0.1.0-preview.1+ignored-external-build");
+            var r = await Inspect(Target(), expected: "0.1.0-preview.2+ignored-external-build");
             Require(r.ExitCode == 0);
         });
         await Case("expected-version-mismatch", async () =>
@@ -214,7 +214,7 @@ internal static class Program
             ("duplicate-nested", "{\"runtimeOptions\":{\"framework\":{\"name\":\"a\",\"name\":\"b\"}}}", 2, "JSON_DUPLICATE_PROPERTY"),
             ("self-contained", "{\"runtimeOptions\":{\"includedFrameworks\":[]}}", 1, "SELF_CONTAINED_UNSUPPORTED"),
             ("ambiguous-framework", "{\"runtimeOptions\":{\"framework\":{},\"frameworks\":[]}}", 1, "FRAMEWORK_DECLARATION_UNSUPPORTED"),
-            ("custom-framework", "{\"runtimeOptions\":{\"framework\":{\"name\":\"Private.Framework\",\"version\":\"10.0.14\"}}}", 1, "CUSTOM_FRAMEWORK_UNSUPPORTED"),
+            ("custom-framework", "{\"runtimeOptions\":{\"framework\":{\"name\":\"Private.Framework\",\"version\":\"10.0.15\"}}}", 1, "CUSTOM_FRAMEWORK_UNSUPPORTED"),
             ("custom-policy", "{\"runtimeOptions\":{\"rollForward\":\"execute-this\",\"framework\":{}}}", 1, "ROLL_FORWARD_UNSUPPORTED")
         }
 
@@ -236,7 +236,7 @@ internal static class Program
         await Case("two-framework-declarations", async () =>
         {
             string p = Target();
-            Runtime(p, "{\"runtimeOptions\":{\"frameworks\":[{\"name\":\"Microsoft.NETCore.App\",\"version\":\"10.0.14\"},{\"name\":\"Microsoft.AspNetCore.App\",\"version\":\"10.0.14\"}]}}");
+            Runtime(p, "{\"runtimeOptions\":{\"frameworks\":[{\"name\":\"Microsoft.NETCore.App\",\"version\":\"10.0.15\"},{\"name\":\"Microsoft.AspNetCore.App\",\"version\":\"10.0.15\"}]}}");
             var r = await Inspect(p);
             Require(r.ExitCode == 0 && r.Frameworks.Count == 2);
         });
@@ -256,7 +256,7 @@ internal static class Program
         await Case("duplicate-framework", async () =>
         {
             string p = Target();
-            Runtime(p, "{\"runtimeOptions\":{\"frameworks\":[{\"name\":\"Microsoft.NETCore.App\",\"version\":\"10.0.14\"},{\"name\":\"Microsoft.NETCore.App\",\"version\":\"10.0.14\"}]}}");
+            Runtime(p, "{\"runtimeOptions\":{\"frameworks\":[{\"name\":\"Microsoft.NETCore.App\",\"version\":\"10.0.15\"},{\"name\":\"Microsoft.NETCore.App\",\"version\":\"10.0.15\"}]}}");
             await Expect(p, 2, "DUPLICATE_FRAMEWORK");
         });
         await Case("deps-wrong-rid", async () =>
@@ -587,7 +587,7 @@ internal static class Program
         await Case("runtime-version-final-newline-unsupported", async () =>
         {
             string p = Target();
-            Runtime(p, JsonSerializer.Serialize(new { runtimeOptions = new { framework = new { name = "Microsoft.NETCore.App", version = "10.0.14\n" } } }));
+            Runtime(p, JsonSerializer.Serialize(new { runtimeOptions = new { framework = new { name = "Microsoft.NETCore.App", version = "10.0.15\n" } } }));
             await Expect(p, 1, "FRAMEWORK_VERSION_UNSUPPORTED");
         });
         await Case("metadata-version-final-newline-not-reported", async () =>

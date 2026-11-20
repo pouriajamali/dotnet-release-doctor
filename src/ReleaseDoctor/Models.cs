@@ -14,7 +14,7 @@ internal sealed record FrameworkRequirement(string Name, string DeclaredVersion,
 internal sealed class Report
 {
     public string Schema { get; set; } = "release-doctor-report-v1";
-    public string ToolVersion { get; set; } = "0.1.0-preview.1";
+    public string ToolVersion { get; set; } = "0.1.0-preview.2";
     public string Rid { get; set; } = "";
     public bool Complete { get; set; }
     public string Outcome { get; set; } = "incomplete";

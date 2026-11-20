@@ -13,6 +13,9 @@ def main():
   f=package/item['path'];assert not f.is_symlink() and f.stat().st_size==item['bytes'] and sha(f)==item['sha256']
  assert a.commit.encode() in (package/'doctor.dll').read_bytes() and (package/'LICENSE').read_text().startswith('MIT License')
  config=json.loads((package/'doctor.runtimeconfig.json').read_text())['runtimeOptions'];assert 'includedFrameworks' in config and 'frameworks' not in config
+ dependencies=json.loads((package/'DEPENDENCIES.json').read_text());runtime=dependencies['runtimeVersion']
+ assert next(x['version'] for x in config['includedFrameworks'] if x['name']=='Microsoft.NETCore.App')==runtime
+ assert next(x['version'] for x in dependencies['packages'] if x['id'].lower()=='microsoft.netcore.app.runtime.'+m['rid'])==runtime
  exe=package/('doctor.exe' if os.name=='nt' else 'doctor');assert exe.is_file()
  assert exe.read_bytes()[:2]==b'MZ' if os.name=='nt' else exe.read_bytes()[:4]==b'\x7fELF'
  env=dict(os.environ,DOTNET_ROOT=str(work/'no-dotnet-install'),DOTNET_ROOT_X64=str(work/'no-dotnet-install'),DOTNET_MULTILEVEL_LOOKUP='0');checks=[]
