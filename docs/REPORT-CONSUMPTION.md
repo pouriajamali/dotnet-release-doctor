@@ -4,7 +4,7 @@ The source-only [Python example](../examples/consume_report.py) projects Doctor'
 v1 `summary.json` into a small JSON decision without starting Doctor, opening the
 target or resolving dependencies. It needs Python 3.12 or later, standard library
 only. It is distributed with source, separately from the frozen
-[v0.1.0-preview.1 consumer bundles](https://github.com/pouriajamali/dotnet-release-doctor/releases/tag/v0.1.0-preview.1).
+[v0.1.0-preview.2 consumer bundles](https://github.com/pouriajamali/dotnet-release-doctor/releases/tag/v0.1.0-preview.2).
 No SDK, new inspector build, workflow or service is needed to consume a report.
 
 Save the **actual** Doctor exit immediately. With a trusted-origin extracted FDD

@@ -57,3 +57,45 @@ exact-owner canonical lease was released. These observations are not a benchmark
 or a claim about other hosts. An initial source-identity lookup failed before
 tests because the Windows Git worktree link is not a Linux path; the bounded
 corrected run checked the same candidate's explicit SHA/file hashes instead.
+
+## .NET10 servicing validation
+
+Runtime/source identity: `9254ccfeb36ef24ccea845d02aff000b0cd8795a`, signed tag
+`v0.1.0-preview.2`, SDK10.0.404 and bundled runtime10.0.15. This is a servicing
+update within .NET10 LTS, with no new target/packaging matrix or runtime-resolution
+logic. The Python M1 consumer is unchanged.
+
+| Actual local validation | Result |
+| --- | --- |
+| Windows26H2 x64 native regression | 83 passed, 0 failed, 3 explicit skips (local symlink privilege and Linux-only FIFO) |
+| Ubuntu24.04 x64 regression coverage | 85 original successes plus the sole corrected FIFO case; all86 cases covered |
+| Extracted, actual consumer archive | 14 checks per OS |
+| Independent M1 Tripwire integration | 3 cases per OS; sentinel absent and input hashes unchanged |
+
+The first Linux suite's nonzero exit is retained: its FIFO fixture could not be
+created on DrvFs. Only that setup-dependent case was corrected to a real FIFO on
+the Linux filesystem; its `NON_REGULAR_FILE`/exit1 expectation passed. The85
+healthy cases, successful restore/build and SDK qualification were not rerun.
+The first SCD restore also exposed a missing offline ASP.NET runtime pack; the
+existing exact official cache was reused and its actual NuGet signature verified.
+Windows SDK restore additionally used its existing transitive WindowsDesktop
+runtime pack. Neither adds a product FrameworkReference or supported target type.
+An aggregation pathmap error was fixed before signing; no healthy package was
+rebuilt for that correction.
+
+Each native phase used the single canonical lane and actual owned kernel limits:
+at most2CPU,4GiB,64 processes/tasks; Linux memory swap max0. Source/SDK bytes and
+host/PID were bound to the actual job. Every owned phase terminated and released
+only its exact lease. The successful Linux continuation observed395,309,056 bytes
+memory peak and39 tasks; the Windows native job observed194,715,648 bytes job
+memory peak. These are observations of this workload, not benchmarks or universal
+resource bounds for other hosts.
+
+Windows26H2 is an experimental observed compatibility host, not a vendor-supported
+OS qualification. Linux is the observed Ubuntu24.04/glibc x64 host. Existing
+matching-OS archive guards and the no-target-execution boundary remain intact.
+CI was NOT_RUN per owner instruction; the exact runtime commit had zero Actions
+runs in the final readback. Commits and the annotated tag retain `[skip ci]`.
+The old preview.1 tag, assets and signatures remain unchanged. Frozen binaries
+and source identify the runtime commit above; later documentation commits do not
+rebuild or replace those assets.

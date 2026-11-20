@@ -31,3 +31,18 @@ Official references: [.NET10 release metadata](https://builds.dotnet.microsoft.c
 [10.0.15 notes](https://github.com/dotnet/core/blob/main/release-notes/10.0/10.0.15/10.0.15.md),
 [supported OS](https://github.com/dotnet/core/blob/main/release-notes/10.0/supported-os.md).
 Static PASS is not proof of startup, framework resolution, safety or a sandbox.
+
+## Local result and provenance
+
+The exact runtime/source commit is `9254ccfeb36ef24ccea845d02aff000b0cd8795a`.
+Windows native validation observed83 pass/0fail/3 declared skips; Linux covered86
+cases through85 retained successes and the sole corrected POSIX FIFO case.
+Both actual extracted archives passed14 package checks and3 independent M1
+sentinel cases. Input hashes stayed unchanged and targets were never executed.
+All actual native phases terminated with exact-own lease release. The archive
+aggregation and known SSH checksum signature were separately validated without
+rebuilding healthy binaries. See the [case study](CASE-STUDY.md) for failed setup
+receipts, corrected causes and the Windows experimental-host limit. CI was
+NOT_RUN per owner; zero Actions runs were observed for the runtime commit.
+Current documentation may be newer than the frozen runtime/source assets; the
+release tag and manifests identify the runtime source precisely.

@@ -140,6 +140,11 @@ dotnet restore tests/ReleaseDoctor.Tests --locked-mode
 dotnet run --project tests/ReleaseDoctor.Tests -c Release --no-restore -- --work artifacts/tests --fixture artifacts/tripwire --fixture-rid $rid --anycpu artifacts/anycpu/AnyCpuGolden.dll
 ```
 
+For Linux tests, `--work` must be on a filesystem that supports POSIX FIFOs and
+symlinks. In WSL, use a fresh Linux directory such as `/var/tmp/doctor-tests`,
+rather than a mounted Windows drive: DrvFs cannot create the FIFO fixture. This
+is a test setup requirement, not evidence that a target is corrupt.
+
 On Ubuntu use the same commands with `rid='linux-x64'` in the shell and `$rid` in
 the arguments. Do not execute the test target: its benign entry writes a sentinel
 if launched. Tests confirm Doctor leaves that sentinel absent and preserves target
